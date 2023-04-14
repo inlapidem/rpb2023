@@ -16,7 +16,7 @@ def ransac_line_fitting(data, n_iterations, threshold, min_inliers):
     distance = np.abs(a * data[:, 0] - data[:, 1] + b) / np.sqrt(a**2 + 1)
     inliers = data[distance < threshold]
     if len(inliers) >= min_inliers:
-      error = np.sum(distances**2)
+      error = np.sum(distance**2)
       if error < best_error:
         best_fit = (a, b)
         best_error = error
