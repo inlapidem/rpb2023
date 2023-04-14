@@ -2,7 +2,7 @@ import nympy as np
 import matplotlib.pyplot as plt
 import csv
 
-def fi_quadratic_RANSAC(x, y, num_iterations = 50, threshold = 0.1):
+def fit_quadratic_RANSAC(x, y, num_iterations = 50, threshold = 0.1):
   best_score = 0
   best_coefficients = None
   for i in range(num_iterations):
