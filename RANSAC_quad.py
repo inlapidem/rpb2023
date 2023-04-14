@@ -21,7 +21,7 @@ def fi_quadratic_RANSAC(x, y, num_iterations = 50, threshold = 0.1):
   return tuple(best_coefficients)
 
 f = open('RANSAC_data2.csv', 'r')
-rdr = csv.reader()
+rdr = csv.reader(f)
 _mydata = []
 for line in rdr:
   x_data = float(line[0])
