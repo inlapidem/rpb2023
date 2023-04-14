@@ -10,9 +10,9 @@ def fit_quadratic_RANSAC(x, y, num_iterations = 50, threshold = 0.1):
     sample_x = x[sample_indices]
     sample_y = y[sample_indices]
     X = np.column_stack([sample_x ** 2, sample_x, np.ones(3)])
-    coefficients = np.linalg.lstsq(X, smaple_y, rcond = None)[0]
+    coefficients = np.linalg.lstsq(X, sample_y, rcond = None)[0]
     distances = np.abs(y - np.polyval(coefficients, x))
-    inliers = distance < threshold
+    inliers = distances < threshold
     num_inliers = np.count_nonzero(inliers)
     if num_inliers > best_score:
       best_score = num_inliers
@@ -36,5 +36,5 @@ a, b, c = fit_quadratic_RANSAC(x, y)
 
 fig, ax = plt.subplots()
 ax.scatter(x, y, color = 'blue')
-ax.plot(x, a * x ** 2 + b * x + c, coloer = 'red')
+ax.plot(x, a * x ** 2 + b * x + c, color = 'red')
 plt.show()
