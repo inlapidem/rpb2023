@@ -17,8 +17,33 @@ class DetermineColor:
     def callback(self, data):
         try:
             # listen image topic
-            image = self.bridge.imgmsg_to_cv2(data, 'bgr8')
-            cv2.imshow('Image', image)
+            img = self.bridge.imgmsg_to_cv2(data, 'bgr8')
+            
+            def onMouse(event, x, y, flags, param):
+                if event == cv2.EVENT_LBUTTONDOWN:
+                    print(img[y, x])
+            cv2.setMouseCallback('Image', onMouse)
+            
+            #leftdown[87, 367], leftup[103, 49], rightup[558, 120], rightdown[551, 357]
+            #x range from 87 to 558, y range from 49 to 367
+            #sad
+            #jangu
+            #squido
+            #sonic
+            #mario
+            #square
+            #lava
+            #red
+            #cuvi
+            #conan
+            #dot
+            #disney
+            #square2
+            #moving
+            #blue [250, 127, 0]
+            #end: while
+            
+            #cv2.imshow('Image', img)
             cv2.waitKey(1)
 
             # prepare rotate_cmd msg
@@ -26,34 +51,43 @@ class DetermineColor:
             msg = Header()
             msg = data.header
             msg.frame_id = '0'  # default: STOP
-
-            # determine background color
-            # TODO
-            # determine the color and assing +1, 0, or, -1 for frame_id
+            
+            #checking : data over 200
+            #img data format : [G, B, R]
+            etc = 0
+            red = 0
+            blue = 0
+            end = 0
+            for i in range(87, 559):
+                for j in range(49, 367):
+                    tmparr = img[j, i]
+                    if tmparr[0] >= 200 and tmparr[1] >=200 and tmparr[2] >= 200:
+                        end += 1
+                    elif tmparr[2] >= 200 and tmparr[0] < 200 and tmparr[1] < 200:
+                        red += 1
+                    elif tmparr[1] >= 200 and tmparr[0] < 200 and tmparr[2] < 200:
+                        blue += 1
+                    else:
+                        etc += 1
+            
+            _max = max([etc, red, blue, end])
+            if _max == etc:
+                print('etc')
+            elif _max == red:
+                print('red')
+            elif _max == blue:
+                print('blue')
+            else:
+                print('end')
+            
             # msg.frame_id = '+1' # CCW (Blue background)
             # msg.frame_id = '0'  # STOP
             # msg.frame_id = '-1' # CW (Red background)
-
-            # publish color_state
             
-            self.count += 1
-            if self.count > 300 and self.count < 600:
-                msg.frame_id = '+1'
-            elif self.count > 600 and self.count < 900:
-                msg.frame_id = '-1'
-            elif self.count > 900 and self.count < 1200:
-                msg.frame_id = '0'
-            elif self.count > 1200 and self.count < 1500:
-                msg.frame_id = '+1'
-            elif self.count > 1500 and self.count < 1800:
-                msg.frame_id = '-1'
-            elif self.count > 1800 and self.count < 2100:
-                msg.frame_id = '0'
             self.color_pub.publish(msg)
 
         except CvBridgeError as e:
             print(e)
-
 
     def rospy_shutdown(self, signal, frame):
         rospy.signal_shutdown("shut down")
@@ -63,4 +97,3 @@ if __name__ == '__main__':
     rospy.init_node('CompressedImages1', anonymous=False)
     detector = DetermineColor()
     rospy.spin()
-
