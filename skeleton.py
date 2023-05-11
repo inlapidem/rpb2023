@@ -18,33 +18,7 @@ class DetermineColor:
         try:
             # listen image topic
             img = self.bridge.imgmsg_to_cv2(data, 'bgr8')
-            cv2.imshow('Image', img)
-            
-            #def onMouse(event, x, y, flags, param):
-            #    if event == cv2.EVENT_LBUTTONDOWN:
-            #        print(img[y, x])
-            #cv2.setMouseCallback('Image', onMouse)
-            
-            #leftdown[87, 367], leftup[103, 49], rightup[558, 120], rightdown[551, 357]
-            #x range from 87 to 558, y range from 49 to 367
-            #sad
-            #jangu
-            #squido
-            #sonic
-            #mario - problem
-            #square
-            #lava
-            #red
-            #cuvi - problem
-            #conan
-            #dot
-            #disney
-            #square2
-            #moving
-            #blue [250, 127, 0]
-            #end: while
-            
-            #cv2.imshow('Image', img)
+
             cv2.waitKey(1)
 
             # prepare rotate_cmd msg
@@ -55,12 +29,12 @@ class DetermineColor:
             
             #checking : data over 200
             #img data format : [G, B, R]
-            etc = 0
+            etc = -520
             red = 0
             blue = 0
             end = 0
-            for i in range(87, 559, 5):
-                for j in range(49, 367, 5):
+            for i in range(87, 559, 10):
+                for j in range(49, 367, 10):
                     tmparr = img[j, i]
                     if tmparr[0] >= 200 and tmparr[1] >=200 and tmparr[2] >= 200:
                         end += 1
@@ -69,7 +43,13 @@ class DetermineColor:
                     elif tmparr[0] >= 200 and tmparr[1] < 200 and tmparr[2] < 200:
                         blue += 1
                     else:
-                        etc += 1
+                        if tmparr[0] < 200 and tmparr[1] < 200 and tmparr[2] < 200:
+                            if tmparr[0] > 100 and tmparr[0] > tmparr[2]:
+                                blue += 1
+                            else:
+                                etc += 1
+                        else:
+                            etc += 1
             
             _max = max([etc, red, blue, end])
             if _max == etc:
@@ -79,7 +59,6 @@ class DetermineColor:
             elif _max == blue:
                 msg.frame_id = '+1'
             else:
-                print('end')
                 msg.frame_id = '0'
             
             # msg.frame_id = '+1' # CCW (Blue background)
