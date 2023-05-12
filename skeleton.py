@@ -28,28 +28,8 @@ class DetermineColor:
             msg.frame_id = '0'  # default: STOP
             
             #checking : data over 200
-            #img data format : [G, B, R]
-            etc = -520
-            red = 0
-            blue = 0
-            end = 0
-            for i in range(87, 559, 10):
-                for j in range(49, 367, 10):
-                    tmparr = img[j, i]
-                    if tmparr[0] >= 200 and tmparr[1] >=200 and tmparr[2] >= 200:
-                        end += 1
-                    elif tmparr[2] >= 200 and tmparr[0] < 200 and tmparr[1] < 200:
-                        red += 1
-                    elif tmparr[0] >= 200 and tmparr[1] < 200 and tmparr[2] < 200:
-                        blue += 1
-                    else:
-                        if tmparr[0] < 200 and tmparr[1] < 200 and tmparr[2] < 200:
-                            if tmparr[0] > 100 and tmparr[0] > tmparr[2]:
-                                blue += 1
-                            else:
-                                etc += 1
-                        else:
-                            etc += 1
+            #img data format : [B, G, R]
+            
             
             _max = max([etc, red, blue, end])
             if _max == etc:
