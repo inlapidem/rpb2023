@@ -1,4 +1,4 @@
-hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+'''hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 bound_lower = np.array([25, 20, 20])
 bound_upper = np.array([100, 255, 255])
 
@@ -15,7 +15,7 @@ output = cv2.drawContours(seg_img, contours, -1, (0, 0, 255), 3)
 def onMouse(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
         print('왼쪽 마우스 클릭 했을 때 좌표 : ', x, y)
-cv2.setMouseCallback('img', onMouse)
+cv2.setMouseCallback('img', onMouse)'''
 
 # !/usr/bin/env python3
 import rospy
