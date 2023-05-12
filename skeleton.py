@@ -27,9 +27,10 @@ class DetermineColor:
             msg = data.header
             msg.frame_id = '0'  # default: STOP
             
-            #checking : data over 200
             #img data format : [B, G, R]
-            
+            img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            ret, thresh = cv2.threshold(img_gray, 150, 255, cv2.THRESH_BINARY)
+            cv2.imshow('Binary', thresh)
             
             _max = max([etc, red, blue, end])
             if _max == etc:
