@@ -13,12 +13,20 @@ class DetermineColor:
         self.color_pub = rospy.Publisher('/rotate_cmd', Header, queue_size=10)
         self.bridge = CvBridge()
         self.count = 0
+        self.tmpval = []
+        self.txt = '0'
 
     def callback(self, data):
         try:
             # listen image topic
             img = self.bridge.imgmsg_to_cv2(data, 'bgr8')
-
+            h, w, c = img.shape
+            etc = 0
+            blue = 0
+            red = 0
+            error = 0
+            
+            cv2.imshow('Image', img)
             cv2.waitKey(1)
 
             # prepare rotate_cmd msg
@@ -28,25 +36,61 @@ class DetermineColor:
             msg.frame_id = '0'  # default: STOP
             
             #img data format : [B, G, R]
-            img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            ret, thresh = cv2.threshold(img_gray, 150, 255, cv2.THRESH_BINARY)
-            cv2.imshow('Binary', thresh)
+            val = []
             
-            _max = max([etc, red, blue, end])
-            if _max == etc:
-                msg.frame_id = '0'
-            elif _max == red:
-                msg.frame_id = '-1'
-            elif _max == blue:
-                msg.frame_id = '+1'
+            if len(self.tmpval) == 0:
+                for i in range(0, h, 10):
+                    tmparr = []
+                    for j in range(0, w, 10):
+                        tmparr.append(list(img[i, j]))
+                    val.append(tmparr)
+                        
+                self.tmpval = val
             else:
-                msg.frame_id = '0'
-            
+                for i in range(0, h, 10):
+                    tmparr = []
+                    for j in range(0, w, 10):
+                        tmp = list(img[i, j])
+                        ttmp = list(self.tmpval[int(i / 10)][int(j / 10)])
+                        
+                        if (abs(int(tmp[0]) - int(ttmp[0])) + abs(int(tmp[1]) - int(ttmp[1])) + abs(int(tmp[2]) - int(ttmp[2]))) >= 200:
+                            error += 1
+                            if tmp[0] >= 200 and tmp[1] >=200 and tmp[2] >= 200:
+                                etc += 1
+                            elif tmp[2] >= 200 and tmp[0] < 200 and tmp[1] < 200:
+                                red += 1
+                            elif tmp[0] >= 200 and tmp[1] < 200 and tmp[2] < 200:
+                                blue += 1
+                            else:
+                                if tmp[0] < 200 and tmp[1] < 200 and tmp[2] < 200:
+                                    if tmp[0] > 100 and tmp[0] > tmp[2]:
+                                        blue += 1
+                                    else:
+                                        etc += 1
+                                else:
+                                    etc += 1
+                            
+                        tmparr.append(tmp)
+                    val.append(tmparr)
+                    
+                if error > 10:
+                    _max = max([blue, red, etc])
+                    if _max == blue:
+                        self.txt = '+1'
+                    elif _max == red:
+                        self.txt = '-1'
+                    else:
+                        self.txt = '0'
+
             # msg.frame_id = '+1' # CCW (Blue background)
             # msg.frame_id = '0'  # STOP
             # msg.frame_id = '-1' # CW (Red background)
             
+            msg.frame_id = self.txt
+            
             self.color_pub.publish(msg)
+            
+            self.tmpval = val
 
         except CvBridgeError as e:
             print(e)
