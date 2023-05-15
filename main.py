@@ -27,7 +27,7 @@ class DetermineColor:
             red = 0
             error = 0
             
-            cv2.imshow('Image', img)
+            #cv2.imshow('Image', img)
             cv2.waitKey(1)
 
             # prepare rotate_cmd msg
@@ -41,20 +41,20 @@ class DetermineColor:
             tmpdiff = []
             
             if len(self.tmpval) == 0:
-                for i in range(0, h, 10):
+                for i in range(0, h, 15):
                     tmparr = []
-                    for j in range(0, w, 10):
+                    for j in range(0, w, 15):
                         tmparr.append(list(img[i, j]))
                     val.append(tmparr)
                         
                 self.tmpval = val
                 
             else:
-                for i in range(0, h, 10):
+                for i in range(0, h, 15):
                     tmparr = []
-                    for j in range(0, w, 10):
+                    for j in range(0, w, 15):
                         tmp = list(img[i, j])
-                        ttmp = list(self.tmpval[int(i / 10)][int(j / 10)])
+                        ttmp = list(self.tmpval[int(i / 15)][int(j / 15)])
                         
                         if (abs(int(tmp[0]) - int(ttmp[0])) + abs(int(tmp[1]) - int(ttmp[1])) + abs(int(tmp[2]) - int(ttmp[2]))) >= 200:
                             tmpdiff.append([i, j])
