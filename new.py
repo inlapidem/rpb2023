@@ -76,7 +76,7 @@ class DetermineColor:
                 xinit = x - abs(ymin - x)
                 xfin = x + abs(ymin - x)
                 yinit = y - abs(xmin - y)
-                yfin = y - abs(xmin - y)
+                yfin = y + abs(xmin - y)
                 
                 for i in range(xinit, xfin, 10):
                     for j in range(yinit, yfin, 10):
