@@ -44,9 +44,9 @@ class DetermineColor:
             tmpdiff = []
             
             if len(self.tmpval) == 0:
-                for i in range(0, h, 10):
+                for i in range(0, h, 15):
                     tmparr = []
-                    for j in range(0, w, 10):
+                    for j in range(0, w, 15):
                         _tmp = list(img[i, j])
                         tmparr.append(_tmp)
                         if sum(_tmp) <= 150:
@@ -78,8 +78,8 @@ class DetermineColor:
                 yinit = y - abs(xmin - y)
                 yfin = y + abs(xmin - y)
                 
-                for i in range(xinit, xfin, 10):
-                    for j in range(yinit, yfin, 10):
+                for i in range(xinit, xfin, 15):
+                    for j in range(yinit, yfin, 15):
                         tmp = list(img[i, j])
                         if tmp[0] >= 200 and tmp[1] >=200 and tmp[2] >= 200:
                             etc += 1
@@ -105,11 +105,11 @@ class DetermineColor:
                         
                 
             else:
-                for i in range(0, h, 10):
+                for i in range(0, h, 15):
                     tmparr = []
-                    for j in range(0, w, 10):
+                    for j in range(0, w, 15):
                         tmp = list(img[i, j])
-                        ttmp = list(self.tmpval[int(i / 10)][int(j / 10)])
+                        ttmp = list(self.tmpval[int(i / 15)][int(j / 15)])
                         
                         if (abs(int(tmp[0]) - int(ttmp[0])) + abs(int(tmp[1]) - int(ttmp[1])) + abs(int(tmp[2]) - int(ttmp[2]))) >= 200:
                             tmpdiff.append([i, j])
